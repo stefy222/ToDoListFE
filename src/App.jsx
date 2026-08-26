@@ -1,9 +1,18 @@
-import { useState } from 'react'
-import './App.css'
-function App() {
-  return (
-   <h1>Hola Mundo</h1>
-  )
-}
+import "./App.css";
+import {useEffect} from 'react';
 
-export default App
+import { getAll } from './services/tarea.service';
+
+function App() {
+  useEffect(() => {
+    const cargarTareas = async () => {
+      try {
+        const response = await getAll();
+        console.log("Tasks: ", response);
+      } catch (error) {
+        console.error("Error", error);
+      }
+    };
+    cargarTareas();
+  },[]);
+}
