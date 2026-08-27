@@ -1,4 +1,5 @@
 const API_URL = import.meta.env.VITE_API_URL;
+
 export const getAll = async () => {
   try {
     const response = await fetch(`${API_URL}/categorias`);
@@ -12,5 +13,22 @@ export const getAll = async () => {
   } catch (error) {
     throw error; 
   }
+};
+
+export const create = async (category) => {
+  const response = await fetch(`${API_URL}/categorias`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Accept": "application/json",
+    },
+    body: JSON.stringify(category),
+  });
+
+  if (!response.ok) {
+    throw new Error("Error al crear la categoría");
+  }
+
+  return await response.json();
 };
 
