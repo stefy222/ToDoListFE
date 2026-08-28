@@ -1,10 +1,18 @@
-import { useState } from 'react';
-import { create } from '../services/category.service';
+import { useEffect, useState } from 'react';
+import { create, update } from '../services/category.service';
 
-function CategoryForm() {
+function CategoryForm({ categoryToEdit, onSaved }) {
   const [name, setName] = useState('');
   const [error, setError] = useState(null);
   const [message, setMessage] = useState(null);
+
+  useEffect(() => {
+    if (categoryToEdit) {
+      setName(categoryToEdit.nombre);
+    } else {
+      setName('');
+    }
+  }, [categoryToEdit]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -13,25 +21,41 @@ function CategoryForm() {
     setMessage(null);
 
     if (!name.trim()) {
-      setError("Es necesario el nombre de la categoría.");
+      setError("El nombre de la categoría es requerido.");
       return;
     }
 
     try {
-      await create({
-        nombre: name.trim()
-      });
+      if (categoryToEdit) {
+        await update(categoryToEdit.id, {
+          nombre: name.trim()
+        });
 
-      setMessage("Categoría creada correctamente.");
+        setMessage("Categoría actualizada correctamente.");
+      } else {
+        await create({
+          nombre: name.trim()
+        });
+
+        setMessage("Categoría creada correctamente.");
+      }
+
       setName('');
+
+      if (onSaved) {
+        onSaved();
+      }
+
     } catch (err) {
-      setError("No se pudo crear la categoría.");
+      setError("No se pudo guardar la categoría.");
     }
   };
 
   return (
     <div className="category-form">
-      <h2>Crear Categoría</h2>
+      <h2>
+        {categoryToEdit ? 'Editar Categoría' : 'Crear Categoría'}
+      </h2>
 
       <form onSubmit={handleSubmit}>
         <label htmlFor="name">Nombre:</label>
@@ -45,7 +69,7 @@ function CategoryForm() {
         />
 
         <button type="submit">
-          Crear categoría
+          {categoryToEdit ? 'Actualizar' : 'Crear'}
         </button>
       </form>
 
@@ -56,3 +80,4 @@ function CategoryForm() {
 }
 
 export default CategoryForm;
+
