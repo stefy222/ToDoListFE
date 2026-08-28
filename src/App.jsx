@@ -1,18 +1,13 @@
 import "./App.css";
-import {useEffect} from 'react';
 
-import { getAll } from './services/tarea.service';
+import CategoryList from "./components/CategoryList";
 
 function App() {
-  useEffect(() => {
-    const cargarTareas = async () => {
-      try {
-        const response = await getAll();
-        console.log("Tasks: ", response);
-      } catch (error) {
-        console.error("Error", error);
-      }
-    };
-    cargarTareas();
-  },[]);
+  return (
+    <div className="app-container">
+      <CategoryList />
+    </div>
+  );
 }
+
+export default App;
