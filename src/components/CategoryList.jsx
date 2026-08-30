@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { getAll, remove } from '../services/category.service';
 
-function CategoryList({ onEdit }) {
+function CategoryList({ onEdit, onView }) {
   const [categories, setCategories] = useState([]);
   const [error, setError] = useState(null);
 
@@ -64,6 +64,10 @@ function CategoryList({ onEdit }) {
                 <td>{category.nombre}</td>
 
                 <td>
+                  <button onClick={() => onView(category.id)}>
+                    Ver
+                  </button>
+                  
                   <button onClick={() => onEdit(category)}>
                     Editar
                   </button>
