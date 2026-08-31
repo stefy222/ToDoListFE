@@ -1,8 +1,9 @@
 const API_URL = import.meta.env.VITE_API_URL;
+import { fetchWithAuth, API_URL } from "./api";
 
 export const getAll = async () => {
   try {
-    const response = await fetch(`${API_URL}/categorias`);
+    const response = await fetchWithAuth(`${API_URL}/categorias`);
 
     if (!response.ok) {
       throw new Error(`Error en la petición: ${response.status} ${response.statusText}`);
@@ -16,7 +17,7 @@ export const getAll = async () => {
 };
 
 export const create = async (category) => {
-  const response = await fetch(`${API_URL}/categorias`, {
+  const response = await fetchWithAuth(`${API_URL}/categorias`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -33,7 +34,7 @@ export const create = async (category) => {
 };
 
 export const update = async (id, category) => {
-  const response = await fetch(`${API_URL}/categorias/${id}`, {
+  const response = await fetchWithAuth(`${API_URL}/categorias/${id}`, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
@@ -48,7 +49,7 @@ export const update = async (id, category) => {
 };
 
 export const remove = async (id) => {
-  const response = await fetch(`${API_URL}/categorias/${id}`, {
+  const response = await fetchWithAuth(`${API_URL}/categorias/${id}`, {
     method: "DELETE",
   });
   if (!response.ok) {
@@ -58,7 +59,7 @@ export const remove = async (id) => {
 };
 
 export const getOne = async (id) => {
-  const response = await fetch(`${API_URL}/categorias/${id}`);
+  const response = await fetchWithAuth(`${API_URL}/categorias/${id}`);
   if (!response.ok) {
     throw new Error("Error al obtener la categoría");
   }
