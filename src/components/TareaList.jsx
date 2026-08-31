@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getAll } from "../services/tarea.service";
+import { getAll, remove } from "../services/tarea.service";
 
 function TareaList({ onCreate, onEdit, onView }) {
   const [tareas, setTareas] = useState([]);
@@ -16,6 +16,27 @@ function TareaList({ onCreate, onEdit, onView }) {
 
     loadTareas();
   }, []);
+
+    const handleDelete = async (id) => {
+    const confirmDelete = window.confirm(
+      "¿Esta seguro de que desea eliminar esta tarea?"
+    );
+
+    if (!confirmDelete) {
+      return;
+    }
+
+    try {
+      await remove(id);
+
+      setTareas(
+        tareas.filter((tarea) => tarea.id !== id)
+      );
+
+    } catch (error) {
+      console.error("Error al eliminar la tarea:", error);
+    }
+  };
 
   return (
     <div>
@@ -37,6 +58,9 @@ function TareaList({ onCreate, onEdit, onView }) {
               </button>
               <button onClick={() => onEdit(tarea)}>
                 Editar
+              </button>
+              <button onClick={() => handleDelete(tarea.id)}>
+                Eliminar
               </button>
             </li>
           ))}
