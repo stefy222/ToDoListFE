@@ -20,6 +20,7 @@ const [etiquetaToEdit, setEtiquetaToEdit] = useState(null);
 const [etiquetaToView, setEtiquetaToView] = useState(null);
 
 const [showTareaForm, setShowTareaForm] = useState(false);
+const [tareaToEdit, setTareaToEdit] = useState(null);
 
 const [reload, setReload] = useState(false);
 
@@ -59,6 +60,27 @@ setReload(!reload);
 
 const handleEtiquetaBack = () => {
 setEtiquetaToView(null);
+};
+
+const handleTareaEdit = (tarea) => {
+  setTareaToEdit(tarea);
+  setShowTareaForm(true);
+};
+
+const handleTareaCreate = () => {
+  setTareaToEdit(null);
+  setShowTareaForm(true);
+};
+
+const handleTareaSaved = () => {
+  setTareaToEdit(null);
+  setShowTareaForm(false);
+  setReload(!reload);
+};
+
+const handleTareaCancel = () => {
+  setTareaToEdit(null);
+  setShowTareaForm(false);
 };
 
 return ( <div className="app-container">
@@ -115,15 +137,15 @@ return ( <div className="app-container">
 
   {showTareaForm ? (
     <TareaForm
-      onSaved={() => {
-        setShowTareaForm(false);
-        setReload(!reload);
-      }}
+      tareaToEdit={tareaToEdit}
+      onSaved={handleTareaSaved}
+      onCancel={handleTareaCancel}
     />
   ) : (
     <TareaList
       key={`tarea-${reload}`}
-      onCreate={() => setShowTareaForm(true)}
+      onCreate={handleTareaCreate}
+      onEdit={handleTareaEdit}
     />
   )}
 
