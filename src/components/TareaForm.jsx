@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
-import { create } from "../services/tarea.service";
+import { create, getOne, update } from "../services/tarea.service";
 import { getAll as getCategories } from "../services/category.service";
 import { getAll as getEtiquetas } from "../services/etiqueta.service";
 
-function TareaForm({ onSaved }) {
+function TareaForm({ tareaToEdit, onSaved, onCancel }) {
 const [titulo, setTitulo] = useState("");
 const [descripcion, setDescripcion] = useState("");
 const [categoriaId, setCategoriaId] = useState("");
@@ -23,7 +23,6 @@ const etiquetasData = await getEtiquetas();
 
     setCategories(categoriesData);
     setEtiquetasList(etiquetasData);
-
   } catch (error) {
     setError("No se pudieron cargar las categorías o etiquetas.");
   }
@@ -33,10 +32,42 @@ loadData();
 
 }, []);
 
+useEffect(() => {
+if (tareaToEdit) {
+const loadTarea = async () => {
+try {
+const data = await getOne(tareaToEdit.id);
+
+      setTitulo(data.titulo);
+      setDescripcion(data.descripcion || "");
+      setCategoriaId(data.categoria_id);
+      setEstado(data.estado);
+
+      // Obtener los IDs de las etiquetas
+      const etiquetaIds = data.etiquetas
+        ? data.etiquetas.map((etiqueta) => etiqueta.id)
+        : [];
+
+      setEtiquetas(etiquetaIds);
+
+    } catch (error) {
+      setError("No se pudo cargar la tarea.");
+    }
+  };
+
+  loadTarea();
+} else {
+  setTitulo("");
+  setDescripcion("");
+  setCategoriaId("");
+  setEstado("");
+  setEtiquetas([]);
+}
+
+}, [tareaToEdit]);
+
 const handleEtiquetasChange = (event) => {
-const selectedOptions = Array.from(
-event.target.selectedOptions
-);
+const selectedOptions = Array.from(event.target.selectedOptions);
 
 const selectedIds = selectedOptions.map(
   (option) => Number(option.value)
@@ -49,6 +80,8 @@ setEtiquetas(selectedIds);
 const handleSubmit = async (event) => {
 event.preventDefault();
 
+setError(null);
+
 const tarea = {
   titulo,
   descripcion,
@@ -58,25 +91,31 @@ const tarea = {
 };
 
 try {
-  await create(tarea);
-
-  setTitulo("");
-  setDescripcion("");
-  setCategoriaId("");
-  setEstado("");
-  setEtiquetas([]);
+  if (tareaToEdit) {
+    await update(tareaToEdit.id, tarea);
+  } else {
+    await create(tarea);
+  }
 
   if (onSaved) {
     onSaved();
   }
 
 } catch (error) {
-  setError("No se pudo crear la tarea.");
+  setError(
+    tareaToEdit
+      ? "No se pudo actualizar la tarea."
+      : "No se pudo crear la tarea."
+  );
 }
 
 };
 
-return ( <div className="tarea-form"> <h2>Crear Tarea</h2>
+return ( <div className="tarea-form">
+
+  <h2>
+    {tareaToEdit ? "Editar Tarea" : "Crear Tarea"}
+  </h2>
 
   {error && <p className="error-msg">{error}</p>}
 
@@ -115,31 +154,29 @@ return ( <div className="tarea-form"> <h2>Crear Tarea</h2>
         </option>
 
         {categories.map((category) => (
-          <option
-            key={category.id}
-            value={category.id}
-          >
+          <option key={category.id} value={category.id}>
             {category.nombre}
           </option>
         ))}
-
       </select>
     </div>
 
-    <div> <label>Estado:</label>
-    <select
+    <div>
+      <label>Estado:</label>
+
+      <select
         value={estado}
         onChange={(e) => setEstado(e.target.value)}
         required
-    >
+      >
         <option value="">
-        Seleccione un estado
-        </option> 
-        
-        <option value="Pendiente">Pendiente</option>
-        <option value="En progreso">En progreso</option>
-        <option value="Completada">Completada</option>
-    </select>
+          Seleccione un estado
+        </option>
+
+        <option value="pendiente">Pendiente</option>
+        <option value="en_progreso">En progreso</option>
+        <option value="completada">Completada</option>
+      </select>
     </div>
 
     <div>
@@ -151,23 +188,22 @@ return ( <div className="tarea-form"> <h2>Crear Tarea</h2>
         onChange={handleEtiquetasChange}
       >
         {etiquetasList.map((etiqueta) => (
-          <option
-            key={etiqueta.id}
-            value={etiqueta.id}
-          >
+          <option key={etiqueta.id} value={etiqueta.id}>
             {etiqueta.nombre}
           </option>
         ))}
       </select>
-
-      <p>
-        Mantén presionado Ctrl para seleccionar varias etiquetas.
-      </p>
     </div>
 
     <button type="submit">
-      Crear Tarea
+      {tareaToEdit ? "Actualizar Tarea" : "Crear Tarea"}
     </button>
+
+    {onCancel && (
+      <button type="button" onClick={onCancel}>
+        Cancelar
+      </button>
+    )}
 
   </form>
 </div>
