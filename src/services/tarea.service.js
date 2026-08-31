@@ -54,3 +54,12 @@ export const update = async (id, tarea) => {
     return await response.json();
 };
 
+export const remove = async (id) => {
+    const response = await fetch(`${API_URL}/tareas/${id}`, {
+    method: "DELETE",
+    });
+    if (!response.ok) {
+        throw new Error("Error al eliminar la tarea");
+    }  
+    return await response.json();
+};
