@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { getAll } from "../services/tarea.service";
 
-function TareaList({ onCreate }) {
+function TareaList({ onCreate, onEdit }) {
   const [tareas, setTareas] = useState([]);
 
   useEffect(() => {
@@ -32,6 +32,9 @@ function TareaList({ onCreate }) {
           {tareas.map((tarea) => (
             <li key={tarea.id}>
               {tarea.titulo}
+              <button onClick={() => onEdit(tarea)}>
+                Editar
+              </button>
             </li>
           ))}
         </ul>
