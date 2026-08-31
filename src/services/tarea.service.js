@@ -53,3 +53,4 @@ export const update = async (id, tarea) => {
 
     return await response.json();
 };
+
