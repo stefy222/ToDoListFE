@@ -1,33 +1,35 @@
-import "./App.css";
-import { useState } from 'react';
+import { useState } from "react";
 
-import CategoryList from "./components/CategoryList";
-import CategoryForm from "./components/CategoryForm";
+import CategoriesPage from "./pages/CategoryPage";
+import TagsPage from "./pages/EtiquetaPage";
+import TasksPage from "./pages/TareaPage";
 
 function App() {
-  const [categoryToEdit, setCategoryToEdit] = useState(null);
-  const [reload, setReload] = useState(false);
-
-  const handleEdit = (category) => {
-    setCategoryToEdit(category);
-  };
-
-  const handleSaved = () => {
-    setCategoryToEdit(null);
-    setReload(!reload);
-  };
+  const [page, setPage] = useState("categories");
 
   return (
     <div className="app-container">
-      <CategoryForm
-        categoryToEdit={categoryToEdit}
-        onSaved={handleSaved}
-      />
 
-      <CategoryList
-        key={reload}
-        onEdit={handleEdit}
-      />
+      <nav>
+        <button onClick={() => setPage("categories")}>
+          Categorías
+        </button>
+
+        <button onClick={() => setPage("tags")}>
+          Etiquetas
+        </button>
+
+        <button onClick={() => setPage("tasks")}>
+          Tareas
+        </button>
+      </nav>
+
+      {page === "categories" && <CategoriesPage />}
+
+      {page === "tags" && <TagsPage />}
+
+      {page === "tasks" && <TasksPage />}
+
     </div>
   );
 }
