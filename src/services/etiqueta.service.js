@@ -1,8 +1,7 @@
-const API_URL = import.meta.env.VITE_API_URL;
 import { fetchWithAuth, API_URL } from "./api";
-export const getAll = async () => {
+export const getAll = async (page=1) => {
   try {
-    const response = await fetchWithAuth(`${API_URL}/etiquetas`);
+    const response = await fetchWithAuth(`${API_URL}/etiquetas?page=${page}`);
 
     if (!response.ok) {
       throw new Error(`Error en la petición: ${response.status} ${response.statusText}`);

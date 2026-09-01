@@ -1,7 +1,6 @@
-const API_URL = import.meta.env.VITE_API_URL;
 import { fetchWithAuth, API_URL } from "./api";
-export const getAll = async () => {
-    const response = await fetchWithAuth(`${API_URL}/tareas`);
+export const getAll = async (page=1) => {
+    const response = await fetchWithAuth(`${API_URL}/tareas?page=${page}`);
 
     if (!response.ok) {
         throw new Error("Error al obtener las tareas");
