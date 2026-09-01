@@ -3,19 +3,22 @@ import { getAll, remove } from "../services/tarea.service";
 
 function TareaList({ onCreate, onEdit, onView }) {
   const [tareas, setTareas] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [lastPage, setLastPage] = useState(1);
 
   useEffect(() => {
     const loadTareas = async () => {
       try {
-        const data = await getAll();
-        setTareas(data);
+        const data = await getAll(currentPage);
+        setTareas(response.data);
+        setLastPage(data.last_page);
       } catch (error) {
         console.error("Error al cargar tareas:", error);
       }
     };
 
     loadTareas();
-  }, []);
+  }, [currentPage]);
 
     const handleDelete = async (id) => {
     const confirmDelete = window.confirm(
@@ -49,22 +52,45 @@ function TareaList({ onCreate, onEdit, onView }) {
       {tareas.length === 0 ? (
         <p>No hay tareas registradas.</p>
       ) : (
-        <ul>
-          {tareas.map((tarea) => (
-            <li key={tarea.id}>
-              {tarea.titulo}
-              <button onClick={() => onView(tarea.id)}>
-                Ver
-              </button>
-              <button onClick={() => onEdit(tarea)}>
-                Editar
-              </button>
-              <button onClick={() => handleDelete(tarea.id)}>
-                Eliminar
-              </button>
-            </li>
-          ))}
-        </ul>
+        <>
+          <ul>
+            {tareas.map((tarea) => (
+              <li key={tarea.id}>
+                {tarea.titulo}
+                <button onClick={() => onView(tarea.id)}>
+                  Ver
+                </button>
+                <button onClick={() => onEdit(tarea)}>
+                  Editar
+                </button>
+                <button onClick={() => handleDelete(tarea.id)}>
+                  Eliminar
+                </button>
+              </li>
+            ))}
+          </ul>
+          <div className="pagination">
+
+          <button
+            onClick={() => setCurrentPage(currentPage - 1)}
+            disabled={currentPage === 1}
+          >
+            Anterior
+          </button>
+
+          <span>
+            Página {currentPage} de {lastPage}
+          </span>
+
+          <button
+            onClick={() => setCurrentPage(currentPage + 1)}
+            disabled={currentPage === lastPage}
+          >
+            Siguiente
+          </button>
+
+        </div>
+        </>
       )}
     </div>
   );

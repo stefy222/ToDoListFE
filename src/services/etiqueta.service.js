@@ -1,8 +1,7 @@
-const API_URL = import.meta.env.VITE_API_URL;
-
-export const getAll = async () => {
+import { fetchWithAuth, API_URL } from "./api";
+export const getAll = async (page=1) => {
   try {
-    const response = await fetch(`${API_URL}/etiquetas`);
+    const response = await fetchWithAuth(`${API_URL}/etiquetas?page=${page}`);
 
     if (!response.ok) {
       throw new Error(`Error en la petición: ${response.status} ${response.statusText}`);
@@ -16,7 +15,7 @@ export const getAll = async () => {
 };
 
 export const create = async (category) => {
-  const response = await fetch(`${API_URL}/etiquetas`, {
+  const response = await fetchWithAuth(`${API_URL}/etiquetas`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -33,7 +32,7 @@ export const create = async (category) => {
 };
 
 export const update = async (id, category) => {
-  const response = await fetch(`${API_URL}/etiquetas/${id}`, {
+  const response = await fetchWithAuth(`${API_URL}/etiquetas/${id}`, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
@@ -48,7 +47,7 @@ export const update = async (id, category) => {
 };
 
 export const remove = async (id) => {
-  const response = await fetch(`${API_URL}/etiquetas/${id}`, {
+  const response = await fetchWithAuth(`${API_URL}/etiquetas/${id}`, {
     method: "DELETE",
   });
   if (!response.ok) {
@@ -58,7 +57,7 @@ export const remove = async (id) => {
 };
 
 export const getOne = async (id) => {
-  const response = await fetch(`${API_URL}/etiquetas/${id}`);
+  const response = await fetchWithAuth(`${API_URL}/etiquetas/${id}`);
   if (!response.ok) {
     throw new Error("Error al obtener la etiqueta");
   }

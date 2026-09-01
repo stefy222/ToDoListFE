@@ -4,19 +4,22 @@ import { getAll, remove } from '../services/etiqueta.service';
 function EtiquetaList({ onEdit, onView }) {
   const [etiquetas, setEtiquetas] = useState([]);
   const [error, setError] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [lastPage, setLastPage] = useState(1);
 
   useEffect(() => {
     const getEtiquetas = async () => {
       try {
-        const data = await getAll();
-        setEtiquetas(data);
+        const data = await getAll(currentPage);
+        setEtiquetas(response.data);
+        setLastPage(data.last_page); 
       } catch (err) {
         setError("No se pudieron cargar las etiquetas.");
       }
     };
 
     getEtiquetas();
-  }, []);
+  }, [currentPage]);
 
   const handleDelete = async (id) => {
     const confirmDelete = window.confirm(
@@ -48,38 +51,61 @@ function EtiquetaList({ onEdit, onView }) {
       {etiquetas.length === 0 ? (
         <p>No hay etiquetas registradas.</p>
       ) : (
-        <table className="etiqueta-table">
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Nombre</th>
-              <th>Acciones</th>
-            </tr>
-          </thead>
-
-          <tbody>
-            {etiquetas.map((etiqueta) => (
-              <tr key={etiqueta.id}>
-                <td>{etiqueta.id}</td>
-                <td>{etiqueta.nombre}</td>
-
-                <td>
-                  <button onClick={() => onView(etiqueta.id)}>
-                    Ver
-                  </button>
-
-                  <button onClick={() => onEdit(etiqueta)}>
-                    Editar
-                  </button>
-
-                  <button onClick={() => handleDelete(etiqueta.id)}>
-                    Eliminar
-                  </button>
-                </td>
+        <>
+          <table className="etiqueta-table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Acciones</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+
+            <tbody>
+              {etiquetas.map((etiqueta) => (
+                <tr key={etiqueta.id}>
+                  <td>{etiqueta.id}</td>
+                  <td>{etiqueta.nombre}</td>
+
+                  <td>
+                    <button onClick={() => onView(etiqueta.id)}>
+                      Ver
+                    </button>
+
+                    <button onClick={() => onEdit(etiqueta)}>
+                      Editar
+                    </button>
+
+                    <button onClick={() => handleDelete(etiqueta.id)}>
+                      Eliminar
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          <div className="pagination">
+
+          <button
+            onClick={() => setCurrentPage(currentPage - 1)}
+            disabled={currentPage === 1}
+          >
+            Anterior
+          </button>
+
+          <span>
+            Página {currentPage} de {lastPage}
+          </span>
+
+          <button
+            onClick={() => setCurrentPage(currentPage + 1)}
+            disabled={currentPage === lastPage}
+          >
+            Siguiente
+          </button>
+
+        </div>
+        </>
       )}
     </div>
   );
