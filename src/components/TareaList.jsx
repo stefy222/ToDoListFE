@@ -10,7 +10,7 @@ function TareaList({ onCreate, onEdit, onView }) {
     const loadTareas = async () => {
       try {
         const data = await getAll(currentPage);
-        setTareas(response.data);
+        setTareas(data.data);
         setLastPage(data.last_page);
       } catch (error) {
         console.error("Error al cargar tareas:", error);
