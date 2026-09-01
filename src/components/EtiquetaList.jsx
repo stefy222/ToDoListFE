@@ -11,7 +11,7 @@ function EtiquetaList({ onEdit, onView }) {
     const getEtiquetas = async () => {
       try {
         const data = await getAll(currentPage);
-        setEtiquetas(response.data);
+        setEtiquetas(data.data);
         setLastPage(data.last_page); 
       } catch (err) {
         setError("No se pudieron cargar las etiquetas.");
