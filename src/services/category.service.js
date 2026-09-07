@@ -56,3 +56,11 @@ export const remove = async (id) => {
   }
   return await response.json();
 };
+
+export const getOne = async (id) => {
+  const response = await fetch(`${API_URL}/categorias/${id}`);
+  if (!response.ok) {
+    throw new Error("Error al obtener la categoría");
+  }
+  return await response.json();
+};
