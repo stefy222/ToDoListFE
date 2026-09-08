@@ -1,157 +1,37 @@
-import "./App.css";
-import { useState } from 'react';
+import { useState } from "react";
 
-import CategoryList from "./components/CategoryList";
-import CategoryForm from "./components/CategoryForm";
-import CategoryDetail from "./components/CategoryDetail";
-
-import EtiquetaList from "./components/EtiquetaList";
-import EtiquetaForm from "./components/EtiquetaForm";
-import EtiquetaDetail from "./components/EtiquetaDetail";
-
-import TareaList from "./components/TareaList";
-import TareaForm from "./components/TareaForm";
+import CategoriesPage from "./pages/CategoryPage";
+import TagsPage from "./pages/EtiquetaPage";
+import TasksPage from "./pages/TareaPage";
 
 function App() {
-const [categoryToEdit, setCategoryToEdit] = useState(null);
-const [categoryToView, setCategoryToView] = useState(null);
+  const [page, setPage] = useState("categories");
 
-const [etiquetaToEdit, setEtiquetaToEdit] = useState(null);
-const [etiquetaToView, setEtiquetaToView] = useState(null);
+  return (
+    <div className="app-container">
 
-const [showTareaForm, setShowTareaForm] = useState(false);
-const [tareaToEdit, setTareaToEdit] = useState(null);
+      <nav>
+        <button onClick={() => setPage("categories")}>
+          Categorías
+        </button>
 
-const [reload, setReload] = useState(false);
+        <button onClick={() => setPage("tags")}>
+          Etiquetas
+        </button>
 
-const handleEdit = (category) => {
-setCategoryToEdit(category);
-setCategoryToView(null);
-};
+        <button onClick={() => setPage("tasks")}>
+          Tareas
+        </button>
+      </nav>
 
-const handleView = (id) => {
-setCategoryToView(id);
-setCategoryToEdit(null);
-};
+      {page === "categories" && <CategoriesPage />}
 
-const handleSaved = () => {
-setCategoryToEdit(null);
-setReload(!reload);
-};
+      {page === "tags" && <TagsPage />}
 
-const handleBack = () => {
-setCategoryToView(null);
-};
+      {page === "tasks" && <TasksPage />}
 
-const handleEtiquetaEdit = (etiqueta) => {
-setEtiquetaToEdit(etiqueta);
-setEtiquetaToView(null);
-};
-
-const handleEtiquetaView = (id) => {
-setEtiquetaToView(id);
-setEtiquetaToEdit(null);
-};
-
-const handleEtiquetaSaved = () => {
-setEtiquetaToEdit(null);
-setReload(!reload);
-};
-
-const handleEtiquetaBack = () => {
-setEtiquetaToView(null);
-};
-
-const handleTareaEdit = (tarea) => {
-  setTareaToEdit(tarea);
-  setShowTareaForm(true);
-};
-
-const handleTareaCreate = () => {
-  setTareaToEdit(null);
-  setShowTareaForm(true);
-};
-
-const handleTareaSaved = () => {
-  setTareaToEdit(null);
-  setShowTareaForm(false);
-  setReload(!reload);
-};
-
-const handleTareaCancel = () => {
-  setTareaToEdit(null);
-  setShowTareaForm(false);
-};
-
-return ( <div className="app-container">
-
-  <h1>Categorías</h1>
-
-  {categoryToView ? (
-    <CategoryDetail
-      categoryId={categoryToView}
-      onBack={handleBack}
-    />
-  ) : (
-    <>
-      <CategoryForm
-        categoryToEdit={categoryToEdit}
-        onSaved={handleSaved}
-      />
-
-      <CategoryList
-        key={`category-${reload}`}
-        onEdit={handleEdit}
-        onView={handleView}
-      />
-    </>
-  )}
-
-  <hr />
-
-  <h1>Etiquetas</h1>
-
-  {etiquetaToView ? (
-    <EtiquetaDetail
-      etiquetaId={etiquetaToView}
-      onBack={handleEtiquetaBack}
-    />
-  ) : (
-    <>
-      <EtiquetaForm
-        etiquetaToEdit={etiquetaToEdit}
-        onSaved={handleEtiquetaSaved}
-      />
-
-      <EtiquetaList
-        key={`etiqueta-${reload}`}
-        onEdit={handleEtiquetaEdit}
-        onView={handleEtiquetaView}
-      />
-    </>
-  )}
-
-  <hr />
-
-  <h1>Tareas</h1>
-
-  {showTareaForm ? (
-    <TareaForm
-      tareaToEdit={tareaToEdit}
-      onSaved={handleTareaSaved}
-      onCancel={handleTareaCancel}
-    />
-  ) : (
-    <TareaList
-      key={`tarea-${reload}`}
-      onCreate={handleTareaCreate}
-      onEdit={handleTareaEdit}
-    />
-  )}
-
-</div>
-
-);
+    </div>
+  );
 }
 
 export default App;
