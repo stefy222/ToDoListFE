@@ -9,12 +9,17 @@ import EtiquetaList from "./components/EtiquetaList";
 import EtiquetaForm from "./components/EtiquetaForm";
 import EtiquetaDetail from "./components/EtiquetaDetail";
 
+import TareaList from "./components/TareaList";
+import TareaForm from "./components/TareaForm";
+
 function App() {
 const [categoryToEdit, setCategoryToEdit] = useState(null);
 const [categoryToView, setCategoryToView] = useState(null);
 
 const [etiquetaToEdit, setEtiquetaToEdit] = useState(null);
 const [etiquetaToView, setEtiquetaToView] = useState(null);
+
+const [showTareaForm, setShowTareaForm] = useState(false);
 
 const [reload, setReload] = useState(false);
 
@@ -102,6 +107,24 @@ return ( <div className="app-container">
         onView={handleEtiquetaView}
       />
     </>
+  )}
+
+  <hr />
+
+  <h1>Tareas</h1>
+
+  {showTareaForm ? (
+    <TareaForm
+      onSaved={() => {
+        setShowTareaForm(false);
+        setReload(!reload);
+      }}
+    />
+  ) : (
+    <TareaList
+      key={`tarea-${reload}`}
+      onCreate={() => setShowTareaForm(true)}
+    />
   )}
 
 </div>
