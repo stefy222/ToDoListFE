@@ -1,5 +1,4 @@
 import { useState } from "react";
-
 import CategoryPage from "./pages/CategoryPage";
 import EtiquetaPage from "./pages/EtiquetaPage";
 import TasksPage from "./pages/TareaPage";
