@@ -11,7 +11,7 @@ function CategoryList({ onEdit, onView }) {
     const getCategories = async () => {
       try {
         const data = await getAll(currentPage);
-        setCategories(response.data);
+        setCategories(data.data);
         setLastPage(data.last_page); 
       } catch (err) {
         setError("No se pudieron cargar las categorías.");
@@ -74,6 +74,10 @@ function CategoryList({ onEdit, onView }) {
 
                 <button onClick={() => onEdit(category)}>
                   Editar
+                </button>
+
+                <button onClick={() => handleDelete(category.id)}>
+                  Eliminar
                 </button>
               </td>
             </tr>
